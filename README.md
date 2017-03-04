@@ -11,6 +11,7 @@ Python依赖库： pexpect, MySQLdb, 17monip, scapy
 在ip.xml中配置要扫描的IP段
 在scanner.py中的auth_table中配置登录密码对，如：
 ("user","password",10)   #user是用户名，password是密码，10是优先级
+
 启动方式：
-python scanner.py 20 #20为开的线程数
+python scanner.py 20 # 20为开的线程数
 
