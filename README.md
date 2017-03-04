@@ -9,6 +9,8 @@ Python依赖库： pexpect, MySQLdb, 17monip, scapy
 将mysql数据库表mysql.sql导入数据库中  
  
 **使用方法**  
+将网卡设置为混杂模式：  
+    Linux下命令： ifconfig eth0 promisc  
 在ip.xml中配置要扫描的IP段  
 在scanner.py中的auth_table中配置登录密码对，如:    
 ("user","password",10)   user是用户名，password是密码，10是优先级  

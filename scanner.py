@@ -110,7 +110,7 @@ def controlP():
     exitFlag = 1
 
     spewer_thread.join()
-    sniffer_thread.join()
+    sniffer_thread.join()  # block forever
     for t in scanner_list:
         t.join()
     #print "scanner finishs..."
@@ -146,7 +146,7 @@ class spewer(threading.Thread):
 
     def run(self):
         print "Start to spewing..."
-        pkt = IP()/TCP(sport=2222,dport=[23],flags="S")
+        pkt = IP()/TCP(sport=2222,dport=23,flags="S")
         for pair in self.ip_pair:
             for ip in pair:
                 pkt[IP].dst = num2ip(ip)
