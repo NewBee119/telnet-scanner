@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS telnet_ip;
+CREATE DATABASE IF NOT EXISTS telnet_data;
 
-USE telnet_ip;
+USE telnet_data;
 
 DROP TABLE IF EXISTS auth_table;
 

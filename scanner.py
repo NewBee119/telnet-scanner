@@ -4,7 +4,8 @@
 
 import heapq
 import copy
-import time
+import time 
+import datetime
 import threading
 from random import choice
 import Queue
@@ -76,6 +77,7 @@ def controlP():
     '''Init threads'''
     scanner_list = []
     
+    start_time = datetime.now()
     spewer_thread = spewer("ip.xml")
     try:
        spewer_thread.daemon = True
@@ -111,6 +113,9 @@ def controlP():
     for t in scanner_list:
         t.join()
     print "scanner finishs..."
+    end_time = datetime.now()
+    print "It costs %d seconds" % (end_time - start_time).seconds
+    sys.exit(1)
 
 def cook(pkt):
     try:
