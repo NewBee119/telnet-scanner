@@ -92,7 +92,7 @@ def controlP():
        print "[Error] Start sniffer faild!"
        sys.exit()
 
-    time.sleep(5)
+    time.sleep(3)
     for i in range(int(sys.argv[1])):
         t = Scanner()
         try:
@@ -163,7 +163,7 @@ class Scanner(threading.Thread):
             queueLocker.acquire()
             if self.queue.empty():
                 queueLocker.release()
-                if is_end > 20:
+                if is_end > 10:
                     break
                 else:
                     is_end = is_end + 1
