@@ -1,4 +1,7 @@
 <?xml version="1.0" ?>
 <ip>
-<ip_range>49.112.45.0-49.112.45.25</ip_range>
+<ip_range>49.112.30.0-49.135.45.25</ip_range>
+<ip_range>119.4.0.0-119.7.255.255</ip_range>
+<ip_range>61.139.0.0-61.139.127.255</ip_range>
+<ip_range>110.184.0.0-110.191.255.255</ip_range>
 </ip>

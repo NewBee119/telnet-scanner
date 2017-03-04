@@ -77,7 +77,7 @@ def controlP():
     '''Init threads'''
     scanner_list = []
     
-    start_time = datetime.now()
+    #start_time = datetime.now()
     spewer_thread = spewer("ip.xml")
     try:
        spewer_thread.daemon = True
@@ -110,12 +110,13 @@ def controlP():
     exitFlag = 1
 
     spewer_thread.join()
+    sniffer_thread.join()
     for t in scanner_list:
         t.join()
-    print "scanner finishs..."
-    end_time = datetime.now()
-    print "It costs %d seconds" % (end_time - start_time).seconds
-    sys.exit(1)
+    #print "scanner finishs..."
+    #end_time = datetime.now()
+    #print "It costs %d seconds" % (end_time - start_time).seconds
+    #sys.exit(1)
 
 def cook(pkt):
     try:
@@ -168,10 +169,6 @@ class Scanner(threading.Thread):
             queueLocker.acquire()
             if self.queue.empty():
                 queueLocker.release()
-                if is_end > 10:
-                    break
-                else:
-                    is_end = is_end + 1
                 time.sleep(3)
                 continue
             try:
