@@ -42,7 +42,8 @@ auth_queue = PriorityQueue()
 for item in auth_table:
     auth_queue.push(item[0:2],item[-1])
 
-
+exitFlag = 0
+lastRecv = time.time()
 queue = Queue.Queue()
 queueLocker = threading.Lock()
 ipLocker = threading.Lock()
@@ -91,28 +92,26 @@ def controlP():
        print "[Error] Start sniffer faild!"
        sys.exit()
 
-    time.sleep(3)
     for i in range(int(sys.argv[1])):
         t = Scanner()
         try:
-            t.daemon = True
             t.start()
         except:
             pass
         scanner_list.append(t)
 
-    while not queue.empty():
-        pass
-
-    exitFlag = 1
-
-    spewer_thread.join()
-    sniffer_thread.join()  # block forever
-    for t in scanner_list:
-        t.join()
-
+    while True:
+        global lastRecv
+        global exitFlag
+        time.sleep(1)
+        if time.time() - lastRecv > 30 and exitFlag:
+            exitFlag = 2
+            break
+            
 def cook(pkt):
     try:
+        global lastRecv
+        lastRecv = time.time()
         if pkt[TCP].flags == 18 and pkt[IP].src not in ip_prompt_queue:
             queue.put(pkt[IP].src)
             print "23 port opened: %s " % (pkt[IP].src)
@@ -147,6 +146,7 @@ class spewer(threading.Thread):
                     send(pkt,verbose=0)
                 except:
                     pass
+        exitFlag = 1
 
 class Scanner(threading.Thread):
 
@@ -160,7 +160,10 @@ class Scanner(threading.Thread):
         while True:
             ip_port = None
             queueLocker.acquire()
-            if self.queue.empty():
+            if self.queue.empty() and exitFlag == 2:
+                queueLocker.release()
+                return
+            elif self.queue.empty():
                 queueLocker.release()
                 time.sleep(3)
                 continue
