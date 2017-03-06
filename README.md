@@ -22,5 +22,7 @@ Python依赖库： pexpect, MySQLdb, 17monip, scapy
 ![image](https://github.com/scu-igroup/telnet-scanner/raw/master/images/mysql_result.png)  
 
 **启动方式**  
-python scanner.py 20 #20为开的线程数
+python scanner.py 20 #20为开的线程数  
+  
+注：目前已在Centos6.5和Ubuntu14.04测试通过
 

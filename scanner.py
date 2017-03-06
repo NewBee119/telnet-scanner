@@ -5,6 +5,7 @@
 import heapq
 import copy
 import time 
+import datetime
 import threading
 from random import choice
 import Queue
@@ -42,8 +43,8 @@ auth_queue = PriorityQueue()
 for item in auth_table:
     auth_queue.push(item[0:2],item[-1])
 
-exitFlag = 0
 lastRecv = time.time()
+exitFlag = 0
 queue = Queue.Queue()
 queueLocker = threading.Lock()
 ipLocker = threading.Lock()
@@ -76,7 +77,7 @@ def choose_ip(ip_pair):
 def controlP():
     '''Init threads'''
     scanner_list = []
-    
+    start_time = datetime.now()
     spewer_thread = spewer("ip.xml")
     try:
        spewer_thread.start()
@@ -101,12 +102,18 @@ def controlP():
         scanner_list.append(t)
 
     while True:
-        global lastRecv
         global exitFlag
+        global lastRecv
         time.sleep(1)
         if time.time() - lastRecv > 30 and exitFlag:
             exitFlag = 2
+        elif exitFlag == 3:
+            end_time = datetime.now()
+            print "scanner mission completes..."
+            print "It totally costs: %d seconds..." % (end_time - start_time).seconds
             break
+    
+    sys.exit(1)
             
 def cook(pkt):
     try:
@@ -156,13 +163,14 @@ class Scanner(threading.Thread):
 
     def run(self):
         print "Starting scanner threading..."
-        is_end = 0
         while True:
             ip_port = None
             queueLocker.acquire()
+            global exitFlag
             if self.queue.empty() and exitFlag == 2:
                 queueLocker.release()
-                return
+                exitFlag = 3
+                break
             elif self.queue.empty():
                 queueLocker.release()
                 time.sleep(3)
