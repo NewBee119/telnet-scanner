@@ -1,3 +1,6 @@
+#!/usr/bin/python
+#encoding:utf-8
+
 import pexpect
 import MySQLdb
 import IP
@@ -82,7 +85,7 @@ class confirm_state:
             if conn.auth == ("user","password"):
                 conn.new_state(None)
                 return
-            db = MySQLdb.connect("localhost","root","123456","telnet_ip",charset="utf8")
+            db = MySQLdb.connect("localhost","root","111111","telnet_data",charset="utf8")
             cursor = db.cursor()
             cursor.execute("INSERT INTO auth_table(ip,port,username,password,loc) values('%s','%d','%s','%s','%s')" % (conn.ip,23,user,passwd,IP.find(conn.ip)))
             db.commit()
