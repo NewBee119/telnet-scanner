@@ -5,7 +5,6 @@
 import heapq
 import copy
 import time 
-import datetime
 import threading
 from random import choice
 import Queue
@@ -77,7 +76,6 @@ def controlP():
     '''Init threads'''
     scanner_list = []
     
-    #start_time = datetime.now()
     spewer_thread = spewer("ip.xml")
     try:
        spewer_thread.daemon = True
@@ -113,16 +111,12 @@ def controlP():
     sniffer_thread.join()  # block forever
     for t in scanner_list:
         t.join()
-    #print "scanner finishs..."
-    #end_time = datetime.now()
-    #print "It costs %d seconds" % (end_time - start_time).seconds
-    #sys.exit(1)
 
 def cook(pkt):
     try:
         if pkt[TCP].flags == 18 and pkt[IP].src not in ip_prompt_queue:
             queue.put(pkt[IP].src)
-            print pkt[IP].src
+            print "23 port opened: %s " % (pkt[IP].src)
             #print pkt[IP].dst
             ip_prompt_queue.append(pkt[IP].src)
     except:
@@ -146,7 +140,7 @@ class spewer(threading.Thread):
 
     def run(self):
         print "Start to spewing..."
-        pkt = IP()/TCP(sport=2222,dport=23,flags="S")
+        pkt = IP()/TCP(sport=2222,dport=[23],flags="S")
         for pair in self.ip_pair:
             for ip in pair:
                 pkt[IP].dst = num2ip(ip)
