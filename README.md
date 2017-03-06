@@ -13,8 +13,9 @@ Python依赖库： pexpect, MySQLdb, 17monip, scapy
     Linux下命令： ifconfig eth0 promisc  
 在ip.xml中配置要扫描的IP段  
 在scanner.py中的auth_table中配置登录密码对，如:    
-("user","password",10)   user是用户名，password是密码，10是优先级  
-扫描结果：
+("user","password",10)   user是用户名，password是密码，10是优先级 
+ 
+**扫描结果**    
 运行时截图:  
 ![image](https://github.com/scu-igroup/telnet-scanner/raw/master/images/result.png)  
 数据库截图：  
