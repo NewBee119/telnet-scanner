@@ -78,7 +78,6 @@ def controlP():
     
     spewer_thread = spewer("ip.xml")
     try:
-       spewer_thread.daemon = True
        spewer_thread.start()
     except:
        print "[Error] Start spewer faild!"
