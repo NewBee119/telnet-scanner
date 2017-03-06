@@ -105,7 +105,7 @@ def controlP():
         global exitFlag
         global lastRecv
         time.sleep(1)
-        if time.time() - lastRecv > 30 and exitFlag:
+        if time.time() - lastRecv > 30 and exitFlag == 1:
             exitFlag = 2
         elif exitFlag == 3:
             end_time = datetime.now()
@@ -144,6 +144,7 @@ class spewer(threading.Thread):
         self.ip_pair = read_ip(filename)
 
     def run(self):
+        global exitFlag
         print "Start to spewing..."
         pkt = IP()/TCP(sport=2222,dport=[23],flags="S")
         for pair in self.ip_pair:
@@ -167,7 +168,7 @@ class Scanner(threading.Thread):
             ip_port = None
             queueLocker.acquire()
             global exitFlag
-            if self.queue.empty() and exitFlag == 2:
+            if self.queue.empty() and exitFlag == 2 or exitFlag == 3:
                 queueLocker.release()
                 exitFlag = 3
                 break
