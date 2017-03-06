@@ -8,8 +8,8 @@ import time
 import threading
 from random import choice
 import Queue
-import socket
-import json
+#import socket
+#import json
 import sys
 from new_module import *
 from scapy.all import *
