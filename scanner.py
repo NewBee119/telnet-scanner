@@ -146,7 +146,7 @@ class spewer(threading.Thread):
     def run(self):
         global exitFlag
         print "Start to spewing..."
-        pkt = IP()/TCP(sport=2222,dport=[23,22],flags="S")
+        pkt = IP()/TCP(sport=2222,dport=[22],flags="S")
         for pair in self.ip_pair:
             for ip in pair:
                 pkt[IP].dst = num2ip(ip)

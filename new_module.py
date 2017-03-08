@@ -55,13 +55,21 @@ class SSHconn_state:
             return
         try:
             conn.child = pexpect.spawn("ssh %s@%s" % (conn.auth[0],conn.ip_port[0]))
-            index = conn.child.expect(["assword:",pexpect.TIMEOUT,pexpect.EOF],timeout=30)
+            index = conn.child.expect(["assword:","(RSA)|(rsa)",pexpect.TIMEOUT,pexpect.EOF],timeout=30)
             if index == 0:
                 conn.new_state(SSHpasswd_state)
+            elif index == 1:
+                conn.sendline("yes")
+                index = conn.child.expect(["assword:",pexpect.TIMEOUT,pexpect.EOF],timeout=30)
+                if index == 0:
+                    conn.new_state(SSHpasswd_state)
+                else:
+                    conn.new_state(SSHconn_state)
             else:
                 conn.new_state(SSHconn_state)
         except:
             conn.new_state(None)
+
 
 
 class TELNETconn_state:
