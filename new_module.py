@@ -3,6 +3,7 @@
 
 import pexpect
 import MySQLdb
+import pxssh
 import IP
 
 
@@ -54,19 +55,13 @@ class SSHconn_state:
             conn.new_state(None)
             return
         try:
-            conn.child = pexpect.spawn("ssh %s@%s" % (conn.auth[0],conn.ip_port[0]))
-            index = conn.child.expect(["assword:","(RSA)|(rsa)",pexpect.TIMEOUT,pexpect.EOF],timeout=30)
-            if index == 0:
-                conn.new_state(SSHpasswd_state)
-            elif index == 1:
-                conn.sendline("yes")
-                index = conn.child.expect(["assword:",pexpect.TIMEOUT,pexpect.EOF],timeout=30)
-                if index == 0:
-                    conn.new_state(SSHpasswd_state)
-                else:
-                    conn.new_state(SSHconn_state)
-            else:
-                conn.new_state(SSHconn_state)
+            username,password = conn.auth
+            s = pxssh.pxssh()
+            if s.login(conn.ip,username,password):
+                conn.new_state(confirm_state)
+        except ExceptionPxssh,e:
+            print "Error: %s" % e
+            conn.new_state(SSHconn_state)
         except:
             conn.new_state(None)
 
@@ -105,25 +100,6 @@ class user_state:
         else:
             conn.exit()
             conn.new_state(TELNETconn_state)
-
-
-class SSHpasswd_state:
-    @staticmethod
-    def _run(conn):
-        if conn.auth:
-            passwd = conn.auth[1]
-        else:
-            conn.new_state(None)
-            return
-        conn.child.sendline(passwd)
-        index = conn.child.expect([r"[$~>/#]","assword:",pexpect.TIMEOUT,pexpect.EOF],timeout=30)
-        if index == 0:
-            print "Got password %s:%s %s:%s" %(conn.ip_port[0],conn.ip_port[1],conn.auth[0],conn.auth[1])
-            conn.new_state(confirm_state)
-        else:
-            conn.exit()
-            conn.new_state(SSHconn_state)
-        
 
 class TELNETpasswd_state:
     @staticmethod
