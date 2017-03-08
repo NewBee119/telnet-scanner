@@ -37,7 +37,7 @@ class PriorityQueue:
         return heapq.heappop(self._queue)[-1]
 
 #this should be a dict
-auth_table = [("user","password",10),("tech","tech",1),("root","Zte521",2),("root","xc3511",2),("root","vizxv",1),("admin","admin",1),("root","admin",1),("root","888888",1),("root","xmhdipc",1),("root","juantech",1),("root","123456",1),("root","54321",1),("support","support",1),("root","",1),("admin","password",1),("root","root",1),("root","root",1),("user","user",1),("admin","admin1234",1),("admin","smcadmin",1),("root","klv123",1),("root","klv1234",1),("root","hi3518",1),("root","jvbzd",1),("root","anko",1),("root","zlxx.",1),("root","system",1)]
+auth_table = [("user","password",10),("tech","tech",1),("root","Zte521",2),("root","xc3511",2),("root","vizxv",1),("admin","admin",1),("root","admin",1),("root","888888",1),("root","xmhdipc",1),("root","juantech",1),("root","123456",1),("root","54321",1),("support","support",1),("root","",1),("admin","password",1),("root","root",1),("root","root",1),("user","user",1),("admin","admin1234",1),("admin","smcadmin",1),("root","klv123",1),("root","klv1234",1),("root","hi3518",1),("root","jvbzd",1),("root","anko",1),("root","zlxx.",1),("root","system",1),("root","changeme",2),("root","alpine",2),("root","toor",1)]
 
 auth_queue = PriorityQueue()
 for item in auth_table:
