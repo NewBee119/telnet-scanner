@@ -3,6 +3,9 @@ import urllib
 import urllib2
 import re
 import json
+import chardet
+
+
 import sys
 reload(sys) 
 sys.setdefaultencoding('gb18030') 
@@ -50,7 +53,8 @@ try:
       print ad
       print (u"从以上地址当中选择一个地址输入屏幕".decode('gb18030'))
       while True:
-            ip_address=raw_input("please input address:").decode('gb18030')
+            ip_address=raw_input("please input address:").decode('utf-8')
+            #print chardet.detect(ip_address)['encoding']
             count=0
             for  i,inputname in enumerate(ip_addressname):
                   if ip_address==inputname:
@@ -87,11 +91,11 @@ try:
                               f.write(doc.toprettyxml(indent = "", newl = "\n", encoding = "utf-8"))  
                               f.close()
                   else:
-                        count +=1
+                       count +=1
 except urllib2.URLError,e:
       if hasattr(e,"code"):
             print e.code
       if hasattr(e,"reason"):
             print e.reason
             
-      
+ 
